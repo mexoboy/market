@@ -10,8 +10,9 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
+ * @property int $external_id
  * @property string $name
- * @property string $image_url
+ * @property string|null $image_url
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Collection|Category[] $categories
@@ -23,6 +24,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'image_url',
+        'external_id',
     ];
 
     public function categories(): BelongsToMany
