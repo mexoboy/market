@@ -5,24 +5,7 @@
 @endphp
 @extends('layout.main')
 @section('scripts')
-    <script>
-        (function () {
-            $(document).on('click .js-product-action', function (e) {
-                var button = $(e.target);
-                var actionUrl = button.data('action');
-
-                button.addClass('disabled');
-
-                $.post(actionUrl)
-                    .done(function () {
-                        button.text('Update');
-                    })
-                    .always(function () {
-                        button.removeClass('disabled');
-                    })
-            });
-        })();
-    </script>
+    <script src="/static/js/search.js?v={{ substr(md5_file(public_path('static/js/search.js')), 0, 6) }}" type="application/javascript"></script>
 @endsection
 @section('content')
     @include('partials.search-form')
