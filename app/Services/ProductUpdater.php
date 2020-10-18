@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Repositories\CategoryRepository;
+use App\Repositories\ProductRepository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use OpenFoodFacts\Collection;
@@ -11,10 +12,15 @@ use OpenFoodFacts\Document;
 
 class ProductUpdater
 {
+    private ProductRepository $productRepository;
     private CategoryRepository $categoryRepository;
 
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository
+    )
     {
+        $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
     }
 
@@ -32,14 +38,8 @@ class ProductUpdater
     public function updateOrCreate(Document $document): Product
     {
         return DB::transaction(function () use ($document) {
-            /** @var Product $product */
-            $product = Product::query()
-                ->where('external_id', $document->_id)
-                ->firstOrNew(['external_id' => $document->_id,]);
-
-            $product->name = $document->product_name;
-            $product->image_url = $document->image_url ?? null;
-            $product->saveOrFail();
+            $product = $this->productRepository->findOrNewByDocument($document);
+            $this->productRepository->updateByDocument($product, $document);
 
             $categories = $this->categoryRepository->getCategoriesFromDocument($document);
             $this->categoryRepository->getOrCreateManyByNames($categories);
