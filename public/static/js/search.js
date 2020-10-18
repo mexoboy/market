@@ -9,6 +9,10 @@
             .done(function () {
                 button.text('Update');
             })
+            .fail(function(response) {
+                console.error(response.responseJSON)
+                alert(response.responseJSON.error || 'Some error happen! Please try later.');
+            })
             .always(function () {
                 button.removeClass('disabled');
             })
