@@ -1,5 +1,5 @@
 (function () {
-    $(document).on('click .js-product-action', function (e) {
+    $(document).on('click', '.js-product-action', function (e) {
         var button = $(e.target);
         var actionUrl = button.data('action');
 
